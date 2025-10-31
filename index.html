@@ -1,117 +1,195 @@
- <!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simulador de Adiantamento - Prima Pay</title>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Economia PrimaPay</title>
+    
+    <link rel="stylesheet" href="src/styles/style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
 
-    <link rel="stylesheet" href="src/styles/style.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
     <header class="header">
-      <div class="container">
-        <div class="logo">
-          <img src="assets/CompletoFundoBrancoReduzida.jpeg" alt="Prima Pay Logotipo" />
+        <div class="container">
+            <div class="logo">
+                <img src="assets/CompletoFundoBrancoReduzida.jpeg" alt="Logo PrimaPay">
+            </div>
         </div>
-      </div>
     </header>
 
-    <main class="main-content container">
-      <section class="cotacao-section">
-        <h1 class="titulo-cotacao">
-          Simule aqui o seu adiantamento de aluguel!
-        </h1>
-        <p class="subtitulo-animado">
-           Selecione seu perfil e preencha os campos para começar.
-        </p>
-
-        <form id="simuladorForm" class="form-calculo">
-          
-          <div class="input-group">
-            <label for="tipoUsuario">Você é:</label>
-            <select id="tipoUsuario" required>
-              <option value="">-- Selecione seu perfil --</option>
-              <option value="locatario">Locatário</option>
-              <option value="imobiliaria">Imobiliária</option>
-            </select>
-          </div>
-
-          <div id="validacaoImobiliaria" style="display: none; width: 100%;" class="form-calculo">
-            <div class="input-group">
-                <label for="codigoParceiro">Insira o Código de Parceiro:</label>
-                <input
-                  type="password"
-                  id="codigoParceiro"
-                  placeholder="Seu código de acesso"
-                />
-                <small id="avisoCodigoInvalido" style="display: none; color: #c0392b; margin-top: 5px;">
-                  Código inválido. Tente novamente.
-                </small>
-            </div>
-            <button type="button" id="btnValidarCodigo" class="btn-principal">
-                Validar
-            </button>
-          </div>
-
-          <p id="infoTaxa" style="display: none; font-size: 0.9em; color: var(--cor-solida-principal); margin-top: -10px; margin-bottom: 15px;"></p>
-
-          <div id="camposDinamicosWrapper" style="display: none; width: 100%;" class="form-calculo">
-
-            <div class="input-group">
-              <label for="valorBaseMensal" id="labelValorBase">Valor Mensal (R$):</label>
-              <input
-                type="number"
-                id="valorBaseMensal"
-                placeholder="Ex: 1000.00"
-                min="0"
-                step="0.01"
-                required
-              />
-            </div>
-
-            <div class="input-group">
-              <label for="valorDesejado" id="labelValorDesejado">Valor LÍQUIDO que deseja receber (R$):</label>
-              <input
-                type="number"
-                id="valorDesejado"
-                placeholder="Ex: 950.00"
-                min="0"
-                step="0.01"
-                required
-              />
-              <small id="avisoLimite" style="display: none; color: #4CAF50; margin-top: 5px;">
-                Seu limite líquido é R$ 0,00
-              </small>
-            </div>
-
-            <div class="input-group" id="grupoMarkup" style="display: none;">
-              <label for="markupInput">"MARKUP" ao mês (%)</label>
-              <input
-                type="number"
-                id="markupInput"
-                placeholder="Ex: 1.5"
-                min="0"
-                step="0.1"
-              />
-            </div>
+    <main class="main-content">
+        <div class="container">
             
-            <button type="submit" id="btnSimular" class="btn-principal">
-              Simular Adiantamento
-            </button>
-          </div>
+            <section class="cotacao-section">
+                
+                <h1 class="titulo-cotacao">Lucre muito mais com as maquininhas Primapay!</h1>
 
-        </form>
+                <form id="simulation-form" class="form-calculo">
 
-        <div id="resultadoCalculo" class="resultado" style="display: none">
-            </div>
+                    <h3 style="margin: 0; font-weight: 600;">O que você gostaria de simular?</h3>
+                    <div class="radio-group-wrapper">
+                        <div>
+                            <input type="radio" id="tipo-mensal" name="tipo-simulacao" value="mensal" checked>
+                            <label for="tipo-mensal">Fechamento Mensal</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="tipo-venda" name="tipo-simulacao" value="venda">
+                            <label for="tipo-venda">Uma Venda Única</label>
+                        </div>
+                    </div>
 
-      </section>
+                    <hr style="border: 0; border-top: 1px solid var(--cor-cinza-claro); width: 100%; margin: 25px 0;">
+
+                    <div id="simulacao-mensal-fields">
+                        <div class="input-group">
+                            <label for="faturamento-mensal">Quanto costuma faturar por mês? (R$):</label>
+                            <input type="number" id="faturamento-mensal" placeholder="Ex: 5000">
+                        </div>
+
+                        <h3 style="margin: 15px 0 5px 0; font-weight: 600;">Informe como geralmente se dividem os tipos de transação:</h3>
+                        <div class="percentage-wrapper">
+                            <div class="input-group">
+                                <label for="percent-debito">Débito (%):</label>
+                                <input type="number" id="percent-debito" placeholder="Ex: 30">
+                            </div>
+                            <div class="input-group">
+                                <label for="percent-credito">Crédito (%):</label>
+                                <input type="number" id="percent-credito" placeholder="Ex: 50">
+                            </div>
+                            <div class="input-group">
+                                <label for="percent-parcelado">Parcelado (%):</label>
+                                <input type="number" id="percent-parcelado" placeholder="Ex: 20">
+                            </div>
+                        </div>
+
+                        <div id="parcelas-mensal-group" class="input-group" style="display: none; margin-top: 15px; max-width: 450px;">
+                            <label for="parcelas-mensal-select">Em quantas vezes (em média) é seu parcelado?</label>
+                            <select id="parcelas-mensal-select" class="input-group select">
+                                <option value="2">2x</option>
+                                <option value="3">3x</option>
+                                <option value="4">4x</option>
+                                <option value="5">5x</option>
+                                <option value="6" selected>6x (Média comum)</option>
+                                <option value="7">7x</option>
+                                <option value="8">8x</option>
+                                <option value="9">9x</option>
+                                <option value="10">10x</option>
+                                <option value="11">11x</option>
+                                <option value="12">12x</option>
+                                <option value="13">13x</option>
+                                <option value="14">14x</option>
+                                <option value="15">15x</option>
+                                <option value="16">16x</option>
+                                <option value="17">17x</option>
+                                <option value="18">18x</option>
+                            </select>
+                        </div>
+                        <div id="percentage-error" class="error-message" style="display: none;">
+                            A soma das porcentagens deve ser exatamente 100%.
+                        </div>
+                    </div>
+
+                    <div id="simulacao-venda-fields" style="display: none;">
+                        <div class="input-group">
+                            <label for="valor-venda">Qual o valor da venda? (R$):</label>
+                            <input type="number" id="valor-venda" placeholder="Ex: 150.00">
+                        </div>
+
+                        <h3 style="margin: 15px 0 5px 0; font-weight: 600;">Qual o tipo de transação?</h3>
+                        <div class="radio-group-wrapper">
+                            <div>
+                                <input type="radio" id="tipo-debito" name="tipo-transacao" value="debito" checked>
+                                <label for="tipo-debito">Débito</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="tipo-credito" name="tipo-transacao" value="credito">
+                                <label for="tipo-credito">Crédito à Vista</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="tipo-parcelado" name="tipo-transacao" value="parcelado">
+                                <label for="tipo-parcelado">Crédito Parcelado</label>
+                            </div>
+                        </div>
+
+                        <div id="parcelas-select-group" class="input-group" style="display: none; margin-top: 15px;">
+                            <label for="numero-parcelas">Em quantas vezes?</label>
+                            <select id="numero-parcelas" class="input-group select">
+                                <option value="2">2x</option>
+                                <option value="3">3x</option>
+                                <option value="4">4x</option>
+                                <option value="5">5x</option>
+                                <option value="6">6x</option>
+                                <option value="7">7x</option>
+                                <option value="8">8x</option>
+                                <option value="9">9x</option>
+                                <option value="10">10x</option>
+                                <option value="11">11x</option>
+                                <option value="12">12x</option>
+                                <option value="13">13x</option>
+                                <option value="14">14x</option>
+                                <option value="15">15x</option>
+                                <option value="16">16x</option>
+                                <option value="17">17x</option>
+                                <option value="18">18x</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 25px 0 5px 0; font-weight: 600;">Como seria o seu prazo para recebimento?</h3>
+                    <div class="radio-group-wrapper">
+                        <div>
+                            <input type="radio" id="prazo-hora" name="prazo-recebimento" value="naHora" checked>
+                            <label for="prazo-hora">Na hora</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="prazo-dia" name="prazo-recebimento" value="umDia">
+                            <label for="prazo-dia">Um dia útil</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" id="simular-btn" class="btn-principal" style="margin-top: 25px;">
+                        Simular
+                    </button>
+                </form>
+
+                <section id="results-container" class="resultado" style="display: none;">
+                    
+                    <h2 id="rates-title">Nossas taxas para o plano "Na Hora":</h2>
+                    <div id="rates-display" class="rates-info-box"></div>
+        
+                    <div class="resultado-colunas">
+                        <div class="coluna-resultados">
+                            <h2>Comparativo de recebimento:</h2>
+                            <div class="quadro-item">
+                                <h3>Quanto você receberia com a <strong>PrimaPay</strong>:</h3>
+                                <p id="prima-total" class="valor-economia-total">R$ 0,00</p>
+                            </div>
+                            <div class="quadro-item">
+                                <h3>Quanto você recebe com maquininhas <strong>tradicionais</strong>:</h3>
+                                <p id="trad-total" class="valor-economia">R$ 0,00</p>
+                            </div>
+                        </div>
+                        
+                        <div class="coluna-propaganda">
+                            <h3>Com a PrimaPay, você economizaria:</h3>
+                            <p id="economia-mes-label" style="margin: 5px 0; font-size: 0.9em; text-transform: uppercase;">Por Mês</p>
+                            <span id="economia-mes">R$ 0,00</span>
+                            
+                            <div id="economia-ano-container">
+                                <p id="economia-ano-label" style="margin: 15px 0 5px 0; font-size: 0.9em; text-transform: uppercase;">Por Ano</p>
+                                <span id="economia-ano">R$ 0,00</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+        </div>
     </main>
 
-    <script src="src/scripts/simulador.js"></script>
-  </body>
+    <script src="src/scripts/script.js"></script>
+</body>
 </html>
