@@ -1,7 +1,6 @@
 // Aguarda o documento HTML carregar completamente
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. DEFINIÇÃO DAS TAXAS (Suas taxas reais) ---
     const taxas = {
         primaPay: {
             naHora: {
@@ -53,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- 2. SELEÇÃO DOS ELEMENTOS DO HTML ---
     const form = document.getElementById('simulation-form');
     const resultsContainer = document.getElementById('results-container');
     const errorDiv = document.getElementById('percentage-error');
@@ -67,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const debitoInput = document.getElementById('percent-debito');
     const creditoInput = document.getElementById('percent-credito');
     const parceladoInput = document.getElementById('percent-parcelado');
-    // NOVO SELETOR MENSAL
+    // SELETOR MENSAL
     const parcelasMensalGroup = document.getElementById('parcelas-mensal-group');
     const parcelasMensalSelect = document.getElementById('parcelas-mensal-select');
 
@@ -87,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const economiaMesSpan = document.getElementById('economia-mes');
     const economiaAnoContainer = document.getElementById('economia-ano-container');
 
-    // --- 3. EVENT LISTENERS (Ouvintes de Ações) ---
+    // --- 3. EVENT LISTENERS
 
     // Listener para trocar entre "Mensal" e "Venda"
     radiosTipoSimulacao.forEach(radio => {
@@ -97,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 camposVenda.style.display = 'none';
                 errorDiv.style.display = 'none';
 
-                // ATUALIZADO: Verifica se o seletor de parcelas mensal deve aparecer
+                //Verifica se o seletor de parcelas mensal deve aparecer
                 const percent = parseFloat(parceladoInput.value);
                 if (percent > 0) {
                     parcelasMensalGroup.style.display = 'block';
@@ -108,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 camposMensal.style.display = 'none';
                 camposVenda.style.display = 'block';
                 errorDiv.style.display = 'none'; 
-                parcelasMensalGroup.style.display = 'none'; // Esconde o seletor mensal
+                parcelasMensalGroup.style.display = 'none';
             }
         });
     });
@@ -124,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // NOVO LISTENER: Mostrar/esconder seletor de parcelas MÉDIA (MENSAL)
     parceladoInput.addEventListener('input', () => {
         const percent = parseFloat(parceladoInput.value);
         if (percent > 0) {
@@ -156,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 4. FUNÇÕES DE CÁLCULO E VALIDAÇÃO ---
 
     function validarPorcentagens() {
         const deb = parseFloat(debitoInput.value) || 0;
@@ -173,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // CÁLCULO MENSAL (ATUALIZADO)
     function calcularSimulacaoMensal() {
         const faturamento = parseFloat(faturamentoInput.value);
         if (isNaN(faturamento) || faturamento <= 0) {
@@ -191,10 +186,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const taxasPrima = taxas.primaPay[prazoSelecionado];
         const taxasTrad = taxas.tradicional[prazoSelecionado];
 
-        // ATUALIZADO: Pega o número de parcelas selecionado pelo usuário
         const parcelasMedia = parcelasMensalSelect.value;
         
-        // ATUALIZADO: Usa a taxa da parcela média selecionada
         const taxaParceladoPrima = taxasPrima.parcelado[parcelasMedia];
         const taxaParceladoTrad = taxasTrad.parcelado[parcelasMedia];
 
@@ -218,14 +211,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const taxasExibicao = {
             debito: taxasPrima.debito,
             credito: taxasPrima.credito,
-            parcelado: taxaParceladoPrima // A taxa da parcela média
+            parcelado: taxaParceladoPrima 
         };
 
-        // ATUALIZADO: Retorna também o 'parcelasMedia'
         return { simType: 'mensal', totalPrima, totalTrad, economiaMes, economiaAno, taxasExibicao, nomePlano, parcelasMedia };
     }
 
-    // CÁLCULO DE VENDA (Sem alterações)
     function calcularSimulacaoVenda() {
         const faturamento = parseFloat(valorVendaInput.value);
         if (isNaN(faturamento) || faturamento <= 0) {
@@ -276,7 +267,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- 5. FUNÇÃO DE EXIBIÇÃO (ATUALIZADA) ---
     function exibirResultados(resultados) {
         const formatBRL = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
@@ -289,24 +279,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p>Débito: <strong>${resultados.taxasExibicao.debito}%</strong></p>
                 <p>Crédito: <strong>${resultados.taxasExibicao.credito}%</strong></p>
             `;
-            // ATUALIZADO: Só mostra a taxa de parcelado se a porcentagem for maior que 0
+
             if (parseFloat(parceladoInput.value) > 0) {
                 ratesDisplay.innerHTML += `
                     <p>Parcelado (Média ${resultados.parcelasMedia}x): <strong>${resultados.taxasExibicao.parcelado}%</strong></p>
                 `;
             }
         } else {
-            // Mostra apenas a taxa usada na venda
             for (const [key, value] of Object.entries(resultados.taxasExibicao)) {
                 ratesDisplay.innerHTML = `<p>${key}: <strong>${value}%</strong></p>`;
             }
         }
 
-        // Atualiza a comparação
         primaTotalSpan.textContent = formatBRL(resultados.totalPrima);
         tradTotalSpan.textContent = formatBRL(resultados.totalTrad);
-
-        // Atualiza o destaque de economia
         economiaMesSpan.textContent = formatBRL(resultados.economiaMes);
         
         if (resultados.simType === 'mensal') {
