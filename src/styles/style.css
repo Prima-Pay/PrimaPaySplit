@@ -131,6 +131,7 @@ body {
     gap: 15px;
     justify-content: center;
     margin-top: 10px;
+    flex-wrap: wrap;
 }
 
 .radio-group-wrapper label {
