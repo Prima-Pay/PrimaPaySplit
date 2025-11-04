@@ -1,7 +1,4 @@
-// Aguarda o documento HTML carregar completamente
 document.addEventListener('DOMContentLoaded', () => {
-
-    // --- 1. DEFINIÇÃO DAS TAXAS (Sem mudança) ---
     const taxas = {
         primaPay: {
             naHora: {
@@ -49,29 +46,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- 2. SELEÇÃO DOS ELEMENTOS DO HTML (Atualizado) ---
     const form = document.getElementById('simulation-form');
     const resultsContainer = document.getElementById('results-container');
     
-    // Tipos de simulação
     const radiosTipoSimulacao = document.querySelectorAll('input[name="tipo-simulacao"]');
     const camposMensal = document.getElementById('simulacao-mensal-fields');
     const camposVenda = document.getElementById('simulacao-venda-fields');
     
-    // Elementos do MENSAL
     const faturamentoInput = document.getElementById('faturamento-mensal');
     const faturamentoSlider = document.getElementById('faturamento-slider');
     const radiosTipoTransacaoMensal = document.querySelectorAll('input[name="tipo-transacao-mensal"]');
     const parcelasMensalGroup = document.getElementById('parcelas-mensal-group');
     const parcelasMensalSelect = document.getElementById('parcelas-mensal-select');
 
-    // Elementos do VENDA
     const valorVendaInput = document.getElementById('valor-venda');
     const radiosTipoTransacao = document.querySelectorAll('input[name="tipo-transacao"]');
     const parcelasSelectGroup = document.getElementById('parcelas-select-group');
     const numeroParcelasSelect = document.getElementById('numero-parcelas');
-
-    // Elementos de resultado
     const ratesTitle = document.getElementById('rates-title');
     const ratesDisplay = document.getElementById('rates-display');
     const primaTotalSpan = document.getElementById('prima-total');
@@ -81,12 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const economiaMesSpan = document.getElementById('economia-mes');
     const economiaAnoContainer = document.getElementById('economia-ano-container');
 
-    // NOVO: Botão de contato WhatsApp
     const btnContato = document.getElementById('btnContato');
 
-    // --- 3. EVENT LISTENERS ---
 
-    // Listener para trocar entre "Mensal" e "Venda"
     radiosTipoSimulacao.forEach(radio => {
         radio.addEventListener('change', (e) => {
             if (e.target.value === 'mensal') {
@@ -106,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Listener para mostrar/esconder o seletor de parcelas (VENDA)
     radiosTipoTransacao.forEach(radio => {
         radio.addEventListener('change', (e) => {
             if (e.target.value === 'parcelado') {
@@ -117,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Listener: Mostrar/esconder seletor de parcelas MÉDIA (MENSAL)
     radiosTipoTransacaoMensal.forEach(radio => {
         radio.addEventListener('change', (e) => {
             if (e.target.value === 'parcelado') {
@@ -128,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // Sincroniza o Slider e o Input de Faturamento
+
     faturamentoSlider.addEventListener('input', (e) => {
         faturamentoInput.value = e.target.value;
     });
@@ -140,7 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
         faturamentoSlider.value = e.target.value;
     });
 
-    // Listener principal do formulário
     form.addEventListener('submit', (event) => {
         event.preventDefault(); 
         
@@ -158,12 +143,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // NOVO: Listener do Botão WhatsApp
     btnContato.addEventListener("click", () => {
         window.location.href = "https://wa.me/message/4BXMIP4XJNK4M1";
     });
 
-    // --- 4. FUNÇÕES DE CÁLCULO (ATUALIZADO COM IMPOSTO) ---
 
     function calcularImpostoSimples(valorBase) {
         const RBT12 = valorBase * 12;
@@ -213,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // CÁLCULO MENSAL (ATUALIZADO)
     function calcularSimulacaoMensal() {
         const faturamento = parseFloat(faturamentoInput.value);
         if (isNaN(faturamento) || faturamento <= 0) {
@@ -255,9 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const descontoPrima = faturamento * (taxaP / 100);
         const descontoTrad = faturamento * (taxaT / 100);
 
-        // ATUALIZADO: Cálculo do Split (sem imposto)
         const totalPrimaSplit = faturamento - descontoPrima;
-        // Cálculo Normal (com imposto)
         const totalPrima = totalPrimaSplit - impostoInfo.impostoProporcional;
         const totalTrad = (faturamento - descontoTrad) - impostoInfo.impostoProporcional;
         
@@ -269,7 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return { simType: 'mensal', totalPrima, totalPrimaSplit, totalTrad, economiaMes, economiaAno, taxasExibicao, nomePlano, impostoInfo };
     }
 
-    // CÁLCULO DE VENDA (ATUALIZADO)
     function calcularSimulacaoVenda() {
         const faturamento = parseFloat(valorVendaInput.value);
         if (isNaN(faturamento) || faturamento <= 0) {
@@ -309,45 +288,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const descontoPrima = faturamento * (taxaP / 100);
         const descontoTrad = faturamento * (taxaT / 100);
-        
-        // ATUALIZADO: Cálculo do Split (sem imposto)
         const totalPrimaSplit = faturamento - descontoPrima;
-        // Cálculo Normal (com imposto)
         const totalPrima = totalPrimaSplit - impostoInfo.impostoProporcional;
         const totalTrad = (faturamento - descontoTrad) - impostoInfo.impostoProporcional;
-        
-        const economiaMes = descontoTrad - descontoPrima; // economia na venda
+        const economiaMes = descontoTrad - descontoPrima;
         const economiaAno = 0; 
-
         const taxasExibicao = { [nomeTaxa]: taxaP };
 
         return { simType: 'venda', totalPrima, totalPrimaSplit, totalTrad, economiaMes, economiaAno, taxasExibicao, nomePlano, impostoInfo };
     }
 
 
-    // --- 5. FUNÇÃO DE EXIBIÇÃO (ATUALIZADA) ---
     function exibirResultados(resultados) {
         const formatBRL = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-        // Muda o título
         ratesTitle.textContent = `Taxas para o plano "${resultados.nomePlano}":`;
         
-        ratesDisplay.innerHTML = ''; // Limpa as taxas anteriores
+        ratesDisplay.innerHTML = ''; 
 
-        // 1. Adiciona a taxa da maquininha
         for (const [key, value] of Object.entries(resultados.taxasExibicao)) {
             ratesDisplay.innerHTML = `<p>${key} (PrimaPag): <strong>${value}%</strong></p>`;
         }
 
-        // 2. Adiciona a taxa do imposto
         ratesDisplay.innerHTML += `<p>Imposto Simples (Est. ${resultados.impostoInfo.nomeFaixa}): <strong>${resultados.impostoInfo.aliquotaEfetivaFmt}%</strong></p>`;
 
-        // ATUALIZADO: Atualiza a comparação (os 3 valores)
         primaSplitTotalSpan.textContent = formatBRL(resultados.totalPrimaSplit);
         primaTotalSpan.textContent = formatBRL(resultados.totalPrima);
         tradTotalSpan.textContent = formatBRL(resultados.totalTrad);
 
-        // Atualiza o destaque de economia
         economiaMesSpan.textContent = formatBRL(resultados.economiaMes);
         
         if (resultados.simType === 'mensal') {

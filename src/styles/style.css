@@ -118,8 +118,8 @@ body {
 }
 
 .percentage-wrapper .input-group {
-    max-width: none; /* Remove a limitação do .input-group */
-    flex: 1; /* Faz os 3 ocuparem espaço igual */
+    max-width: none;
+    flex: 1; 
 }
 
 .percentage-wrapper .input-group label {
@@ -144,7 +144,7 @@ body {
 }
 
 .radio-group-wrapper input[type="radio"] {
-    display: none; /* Esconde o botão de rádio real */
+    display: none; 
 }
 
 .radio-group-wrapper input[type="radio"]:checked+label {
@@ -250,20 +250,14 @@ body {
     gap: 10px;
 }
 
-/* ... (Estilos anteriores) ... */
-
-
-/* --- Coluna da Direita (Propagandas) --- */
-/* ATUALIZADO: Agora é um CONTAINER flexível */
 .coluna-propaganda {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Cria um espaço entre os dois quadros de propaganda */
-    align-self: flex-end; /* Mantém a coluna alinhada à base */
+    gap: 10px; 
+    align-self: flex-end;
 }
 
-/* NOVO: Este é o quadro roxo (com os estilos do .coluna-propaganda antigo) */
 .quadro-item-economia {
     background: linear-gradient(to top left, var(--cor-primaria-start), var(--cor-primaria-end));
     color: var(--cor-texto-claro);
@@ -274,7 +268,6 @@ body {
     height: fit-content;
 }
 
-/* ATUALIZADO: Os seletores de h3, span e p agora apontam para o novo quadro */
 .quadro-item-economia h3 {
     margin-top: 0;
     font-size: 1.1em;
@@ -292,7 +285,6 @@ body {
     font-size: 0.95em;
 }
 
-/* ... (O resto dos seus estilos) ... */
 
 .quadro-item {
     background-color: var(--cor-fundo);
@@ -364,29 +356,27 @@ body {
     }
 }
 
-/* --- Estilos do Novo Quadro Split (Dourado) --- */
 .quadro-item-split {
     border: 2px solid #ffd700;
-    background-color: #fffaf0; /* Fundo "dourado" bem claro */
-    text-align: center; /* Centraliza o conteúdo do box */
+    background-color: #fffaf0; 
+    text-align: center;
 }
 
 .quadro-item-split h3 {
-    text-align: center; /* Alinha o h3 à esquerda, como os outros */
+    text-align: center;
 }
 
-/* Novo estilo de valor para o split */
 .valor-economia-split {
     font-size: 2.2em;
     font-weight: 700;
-    color: #DAA520; /* Dourado mais escuro */
+    color: #DAA520;
     margin: 0;
 }
 
 .split-descricao {
     font-size: 0.9em;
     margin: 5px 0 15px 0;
-    text-align: left; /* Alinha a descrição à esquerda */
+    text-align: left; 
     color: var(--cor-texto-escuro);
 }
 
@@ -409,7 +399,6 @@ body {
     transform: translateY(-1px);
 }
 
-/* Ajuste de responsividade para o novo valor */
 @media (max-width: 768px) {
     .valor-economia-split {
         font-size: 1.8em;
