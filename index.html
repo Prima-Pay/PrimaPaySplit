@@ -29,7 +29,6 @@
                 <h1 class="titulo-cotacao">Lucre muito mais com as maquininhas PrimaPagBank!</h1>
 
                 <form id="simulation-form" class="form-calculo">
-
                     <h3 style="margin: 0; font-weight: 600;">O que você gostaria de simular?</h3>
                     <div class="radio-group-wrapper">
                         <div>
@@ -45,27 +44,27 @@
                     <hr style="border: 0; border-top: 1px solid var(--cor-cinza-claro); width: 100%; margin: 25px 0;">
 
                     <div id="simulacao-mensal-fields">
-                        <div class="input-group">
+                        <div class="input-group" style="max-width: 450px;">
                             <label for="faturamento-mensal">Quanto costuma faturar por mês? (R$):</label>
-                            <input type="number" id="faturamento-mensal" placeholder="Ex: 5000">
+                            <input type="number" id="faturamento-mensal" placeholder="Ex: 5000" min="0" max="500000" step="100" value="5000">
+                            <input type="range" id="faturamento-slider" min="0" max="500000" step="100" value="5000" style="width: 100%; margin-top: 10px; cursor: pointer;">
                         </div>
 
-                        <h3 style="margin: 15px 0 5px 0; font-weight: 600;">Informe como geralmente se dividem os tipos de transação:</h3>
-                        <div class="percentage-wrapper">
-                            <div class="input-group">
-                                <label for="percent-debito">Débito (%):</label>
-                                <input type="number" id="percent-debito" placeholder="Ex: 30">
+                        <h3 style="margin: 15px 0 5px 0; font-weight: 600;">Qual tipo de transação você mais usa?</h3>
+                        <div class="radio-group-wrapper">
+                            <div>
+                                <input type="radio" id="tipo-mensal-debito" name="tipo-transacao-mensal" value="debito" checked>
+                                <label for="tipo-mensal-debito">Débito</label>
                             </div>
-                            <div class="input-group">
-                                <label for="percent-credito">Crédito (%):</label>
-                                <input type="number" id="percent-credito" placeholder="Ex: 50">
+                            <div>
+                                <input type="radio" id="tipo-mensal-credito" name="tipo-transacao-mensal" value="credito">
+                                <label for="tipo-mensal-credito">Crédito</label>
                             </div>
-                            <div class="input-group">
-                                <label for="percent-parcelado">Parc. (%):</label>
-                                <input type="number" id="percent-parcelado" placeholder="Ex: 20">
+                            <div>
+                                <input type="radio" id="tipo-mensal-parcelado" name="tipo-transacao-mensal" value="parcelado">
+                                <label for="tipo-mensal-parcelado">Crédito Parcelado</label>
                             </div>
                         </div>
-
                         <div id="parcelas-mensal-group" class="input-group" style="display: none; margin-top: 15px; max-width: 450px;">
                             <label for="parcelas-mensal-select">Em quantas vezes (em média) é seu parcelado?</label>
                             <select id="parcelas-mensal-select" class="input-group select">
@@ -88,9 +87,6 @@
                                 <option value="18">18x</option>
                             </select>
                         </div>
-                        <div id="percentage-error" class="error-message" style="display: none;">
-                            A soma das porcentagens deve ser exatamente 100%.
-                        </div>
                     </div>
 
                     <div id="simulacao-venda-fields" style="display: none;">
@@ -101,18 +97,9 @@
 
                         <h3 style="margin: 15px 0 5px 0; font-weight: 600;">Qual o tipo de transação?</h3>
                         <div class="radio-group-wrapper">
-                            <div>
-                                <input type="radio" id="tipo-debito" name="tipo-transacao" value="debito" checked>
-                                <label for="tipo-debito">Débito</label>
-                            </div>
-                            <div>
-                                <input type="radio" id="tipo-credito" name="tipo-transacao" value="credito">
-                                <label for="tipo-credito">Crédito</label>
-                            </div>
-                            <div>
-                                <input type="radio" id="tipo-parcelado" name="tipo-transacao" value="parcelado">
-                                <label for="tipo-parcelado">Crédito Parcelado</label>
-                            </div>
+                            <div><input type="radio" id="tipo-debito" name="tipo-transacao" value="debito" checked><label for="tipo-debito">Débito</label></div>
+                            <div><input type="radio" id="tipo-credito" name="tipo-transacao" value="credito"><label for="tipo-credito">Crédito</label></div>
+                            <div><input type="radio" id="tipo-parcelado" name="tipo-transacao" value="parcelado"><label for="tipo-parcelado">Crédito Parcelado</label></div>
                         </div>
 
                         <div id="parcelas-select-group" class="input-group" style="display: none; margin-top: 15px;">
@@ -141,14 +128,8 @@
 
                     <h3 style="margin: 25px 0 5px 0; font-weight: 600;">Como seria o seu prazo para recebimento?</h3>
                     <div class="radio-group-wrapper">
-                        <div>
-                            <input type="radio" id="prazo-hora" name="prazo-recebimento" value="naHora" checked>
-                            <label for="prazo-hora">Na hora</label>
-                        </div>
-                        <div>
-                            <input type="radio" id="prazo-dia" name="prazo-recebimento" value="umDia">
-                            <label for="prazo-dia">Um dia útil</label>
-                        </div>
+                        <div><input type="radio" id="prazo-hora" name="prazo-recebimento" value="naHora" checked><label for="prazo-hora">Na hora</label></div>
+                        <div><input type="radio" id="prazo-dia" name="prazo-recebimento" value="umDia"><label for="prazo-dia">Um dia útil</label></div>
                     </div>
                     
                     <button type="submit" id="simular-btn" class="btn-principal" style="margin-top: 25px;">
@@ -158,31 +139,53 @@
 
                 <section id="results-container" class="resultado" style="display: none;">
                     
-                    <h2 id="rates-title">Nossas taxas para o plano "Na Hora":</h2>
+                    <h2 id="rates-title">Taxas para o plano "Na Hora":</h2>
                     <div id="rates-display" class="rates-info-box"></div>
-        
+    
                     <div class="resultado-colunas">
+                        
                         <div class="coluna-resultados">
                             <h2>Comparativo de recebimento:</h2>
+                            
                             <div class="quadro-item">
-                                <h3>Quanto você receberia com a <strong>PrimaPagBank</strong>:</h3>
+                                <h3>Quanto você receberia com a <strong>PrimaPagBank</strong> (Normal):</h3>
                                 <p id="prima-total" class="valor-economia-total">R$ 0,00</p>
                             </div>
+
                             <div class="quadro-item">
                                 <h3>Quanto você recebe com maquininhas <strong>tradicionais</strong>:</h3>
                                 <p id="trad-total" class="valor-economia">R$ 0,00</p>
                             </div>
+
+                            <button id="btnContato" class="btn-secundario">
+                                Falar com um especialista
+                            </button>
                         </div>
                         
                         <div class="coluna-propaganda">
-                            <h3>Com a PrimaPagBank, você economizaria:</h3>
-                            <p id="economia-mes-label" style="margin: 5px 0; font-size: 0.9em; text-transform: uppercase;">Por Mês</p>
-                            <span id="economia-mes">R$ 0,00</span>
                             
-                            <div id="economia-ano-container">
-                                <p id="economia-ano-label" style="margin: 15px 0 5px 0; font-size: 0.9em; text-transform: uppercase;">Por Ano</p>
-                                <span id="economia-ano">R$ 0,00</span>
+                            <div class="quadro-item-economia">
+                                <h3>Com a PrimaPagBank, você economizaria:</h3>
+                                <p id="economia-mes-label" style="margin: 5px 0; font-size: 0.9em; text-transform: uppercase;">Por Mês</p>
+                                <span id="economia-mes">R$ 0,00</span>
+                                
+                                <div id="economia-ano-container">
+                                    <p id="economia-ano-label" style="margin: 15px 0 5px 0; font-size: 0.9em; text-transform: uppercase;">Por Ano</p>
+                                    <span id="economia-ano">R$ 0,00</span>
+                                </div>
                             </div>
+                            
+                            <div class="quadro-item quadro-item-split">
+                                <h3>Receba <strong>MAIS</strong> com a Maquininha PrimaPay:</h3>
+                                <p id="prima-split-total" class="valor-economia-split">R$ 0,00</p>
+                                <p class="split-descricao">
+                                    Veja quanto você economiza ao pagar <strong>impostos apenas sobre a sua comissão</strong>, e não sobre o valor total da venda.
+                                </p>
+                                <a href="https://primapay.com/maquininhas-prima-pay/" target="_blank" class="btn-cta-split">
+                                    Conhecer Solução Split
+                                </a>
+                            </div>
+
                         </div>
                     </div>
                 </section>

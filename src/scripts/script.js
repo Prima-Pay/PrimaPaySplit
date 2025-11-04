@@ -1,25 +1,24 @@
 // Aguarda o documento HTML carregar completamente
 document.addEventListener('DOMContentLoaded', () => {
 
+    // --- 1. DEFINIÇÃO DAS TAXAS (Sem mudança) ---
     const taxas = {
         primaPay: {
             naHora: {
-                debito: 2.39,
-                credito: 3.95,
+                debito: 1.29,
+                credito: 2.89,
                 parcelado: { 
-                    "default": 6.73,
-                     "2": 5.29, "3": 5.78, "4": 6.01, "5": 6.73,
-                    "6": 5.78, "7": 8.65, "8": 9.35, "9": 10.73, "10": 11.40,
-                    "11": 12.07, "12": 13.14, "13": 13.79, "14": 14.45, "15": 15.09,
-                    "16": 15.73, "17": 16.36, "18": 17.55,
+                    "default": 6.73, "2": 4.55, "3": 5.29, "4": 5.78, "5": 6.01, "6": 6.73,
+                    "7": 5.78, "8": 8.65, "9": 9.35, "10": 10.73, "11": 11.40,
+                    "12": 12.07, "13": 13.14, "14": 13.79, "15": 14.45, "16": 15.09,
+                    "17": 15.73, "18": 16.36
                 }
             },
             umDia: {
-                debito: 1.39, 
+                debito: 1.89, 
                 credito: 2.95, 
                 parcelado: { 
-                    "default": 8.11, // 6x
-                    "2": 4.99, "3": 5.78, "4": 6.56, "5": 7.34, "6": 8.11,
+                    "default": 8.11, "2": 4.99, "3": 5.78, "4": 6.56, "5": 7.34, "6": 8.11,
                     "7": 8.52, "8": 10.27, "9": 11.02, "10": 11.76, "11": 12.48,
                     "12": 13.21, "13": 14.31, "14": 15.02, "15": 15.72, "16": 16.41,
                     "17": 17.09, "18": 17.76
@@ -31,8 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 debito: 2.49,
                 credito: 4.49,
                 parcelado: {
-                    "default": 8.23,
-                    "2": 5.75, "3": 6.59, "4": 7.18, "5": 7.41, "6": 8.23,
+                    "default": 8.23, "2": 5.75, "3": 6.59, "4": 7.18, "5": 7.41, "6": 8.23,
                     "7": 7.18, "8": 10.25, "9": 11.05, "10": 12.53, "11": 13.20,
                     "12": 13.97, "13": 15.14, "14": 15.79, "15": 16.45, "16": 17.19,
                     "17": 17.83, "18": 18.46
@@ -42,8 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 debito: 2.99,
                 credito: 4.99,
                 parcelado: {
-                    "default": 9.61,
-                    "2": 6.29, "3": 7.18, "4": 8.06, "5": 8.94, "6": 9.61,
+                    "default": 9.61, "2": 6.29, "3": 7.18, "4": 8.06, "5": 8.94, "6": 9.61,
                     "7": 10.12, "8": 11.97, "9": 12.82, "10": 13.56, "11": 14.28,
                     "12": 15.11, "13": 16.31, "14": 17.02, "15": 17.72, "16": 18.41,
                     "17": 19.19, "18": 19.96
@@ -52,20 +49,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // --- 2. SELEÇÃO DOS ELEMENTOS DO HTML (Atualizado) ---
     const form = document.getElementById('simulation-form');
     const resultsContainer = document.getElementById('results-container');
-    const errorDiv = document.getElementById('percentage-error');
-
+    
+    // Tipos de simulação
     const radiosTipoSimulacao = document.querySelectorAll('input[name="tipo-simulacao"]');
     const camposMensal = document.getElementById('simulacao-mensal-fields');
     const camposVenda = document.getElementById('simulacao-venda-fields');
     
     // Elementos do MENSAL
     const faturamentoInput = document.getElementById('faturamento-mensal');
-    const debitoInput = document.getElementById('percent-debito');
-    const creditoInput = document.getElementById('percent-credito');
-    const parceladoInput = document.getElementById('percent-parcelado');
-    // SELETOR MENSAL
+    const faturamentoSlider = document.getElementById('faturamento-slider');
+    const radiosTipoTransacaoMensal = document.querySelectorAll('input[name="tipo-transacao-mensal"]');
     const parcelasMensalGroup = document.getElementById('parcelas-mensal-group');
     const parcelasMensalSelect = document.getElementById('parcelas-mensal-select');
 
@@ -80,12 +76,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const ratesDisplay = document.getElementById('rates-display');
     const primaTotalSpan = document.getElementById('prima-total');
     const tradTotalSpan = document.getElementById('trad-total');
-    
+    const primaSplitTotalSpan = document.getElementById('prima-split-total'); // NOVO
     const economiaMesLabel = document.getElementById('economia-mes-label');
     const economiaMesSpan = document.getElementById('economia-mes');
     const economiaAnoContainer = document.getElementById('economia-ano-container');
 
-    // --- 3. EVENT LISTENERS
+    // NOVO: Botão de contato WhatsApp
+    const btnContato = document.getElementById('btnContato');
+
+    // --- 3. EVENT LISTENERS ---
 
     // Listener para trocar entre "Mensal" e "Venda"
     radiosTipoSimulacao.forEach(radio => {
@@ -93,11 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target.value === 'mensal') {
                 camposMensal.style.display = 'block';
                 camposVenda.style.display = 'none';
-                errorDiv.style.display = 'none';
-
-                //Verifica se o seletor de parcelas mensal deve aparecer
-                const percent = parseFloat(parceladoInput.value);
-                if (percent > 0) {
+                const tipoSelecionado = document.querySelector('input[name="tipo-transacao-mensal"]:checked').value;
+                if (tipoSelecionado === 'parcelado') {
                     parcelasMensalGroup.style.display = 'block';
                 } else {
                     parcelasMensalGroup.style.display = 'none';
@@ -105,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 camposMensal.style.display = 'none';
                 camposVenda.style.display = 'block';
-                errorDiv.style.display = 'none'; 
                 parcelasMensalGroup.style.display = 'none';
             }
         });
@@ -122,15 +117,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    parceladoInput.addEventListener('input', () => {
-        const percent = parseFloat(parceladoInput.value);
-        if (percent > 0) {
-            parcelasMensalGroup.style.display = 'block';
-        } else {
-            parcelasMensalGroup.style.display = 'none';
-        }
+    // Listener: Mostrar/esconder seletor de parcelas MÉDIA (MENSAL)
+    radiosTipoTransacaoMensal.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if (e.target.value === 'parcelado') {
+                parcelasMensalGroup.style.display = 'block';
+            } else {
+                parcelasMensalGroup.style.display = 'none';
+            }
+        });
+    });
+    
+    // Sincroniza o Slider e o Input de Faturamento
+    faturamentoSlider.addEventListener('input', (e) => {
+        faturamentoInput.value = e.target.value;
     });
 
+    faturamentoInput.addEventListener('input', (e) => {
+        if (parseFloat(e.target.value) > 500000) {
+            e.target.value = 500000;
+        }
+        faturamentoSlider.value = e.target.value;
+    });
 
     // Listener principal do formulário
     form.addEventListener('submit', (event) => {
@@ -140,9 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let resultados;
 
         if (simType === 'mensal') {
-            if (!validarPorcentagens()) {
-                return; 
-            }
             resultados = calcularSimulacaoMensal();
         } else {
             resultados = calcularSimulacaoVenda();
@@ -153,70 +158,118 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // NOVO: Listener do Botão WhatsApp
+    btnContato.addEventListener("click", () => {
+        window.location.href = "https://wa.me/message/4BXMIP4XJNK4M1";
+    });
 
-    function validarPorcentagens() {
-        const deb = parseFloat(debitoInput.value) || 0;
-        const cre = parseFloat(creditoInput.value) || 0;
-        const par = parseFloat(parceladoInput.value) || 0;
-        const total = deb + cre + par;
+    // --- 4. FUNÇÕES DE CÁLCULO (ATUALIZADO COM IMPOSTO) ---
 
-        if (total !== 100) {
-            errorDiv.style.display = 'block';
-            return false;
+    function calcularImpostoSimples(valorBase) {
+        const RBT12 = valorBase * 12;
+        
+        let aliquotaNominal = 0;
+        let valorDeducao = 0;
+        let nomeFaixa = "";
+
+        if (RBT12 <= 180000) {
+            aliquotaNominal = 0.04;
+            valorDeducao = 0;
+            nomeFaixa = "Faixa 1";
+        } else if (RBT12 <= 360000) {
+            aliquotaNominal = 0.073;
+            valorDeducao = 5940;
+            nomeFaixa = "Faixa 2";
+        } else if (RBT12 <= 720000) {
+            aliquotaNominal = 0.095;
+            valorDeducao = 13860;
+            nomeFaixa = "Faixa 3";
+        } else if (RBT12 <= 1800000) {
+            aliquotaNominal = 0.107;
+            valorDeducao = 22500;
+            nomeFaixa = "Faixa 4";
+        } else if (RBT12 <= 3600000) {
+            aliquotaNominal = 0.143;
+            valorDeducao = 87300;
+            nomeFaixa = "Faixa 5";
         } else {
-            errorDiv.style.display = 'none';
-            return true;
+            aliquotaNominal = 0.190;
+            valorDeducao = 378000;
+            nomeFaixa = (RBT12 <= 4800000) ? "Faixa 6" : "Faixa 6+";
         }
+
+        let aliquotaEfetiva = aliquotaNominal;
+        if (RBT12 > 180000) {
+             aliquotaEfetiva = ((RBT12 * aliquotaNominal) - valorDeducao) / RBT12;
+        }
+
+        const impostoProporcional = valorBase * aliquotaEfetiva;
+        const aliquotaEfetivaFmt = (aliquotaEfetiva * 100).toFixed(2);
+
+        return {
+            impostoProporcional: impostoProporcional,
+            aliquotaEfetivaFmt: aliquotaEfetivaFmt,
+            nomeFaixa: nomeFaixa
+        };
     }
 
+    // CÁLCULO MENSAL (ATUALIZADO)
     function calcularSimulacaoMensal() {
         const faturamento = parseFloat(faturamentoInput.value);
         if (isNaN(faturamento) || faturamento <= 0) {
             alert('Por favor, insira um valor de faturamento válido.');
             return;
         }
-
-        const pDeb = (parseFloat(debitoInput.value) || 0) / 100;
-        const pCre = (parseFloat(creditoInput.value) || 0) / 100;
-        const pPar = (parseFloat(parceladoInput.value) || 0) / 100;
+        
+        const impostoInfo = calcularImpostoSimples(faturamento);
         
         const prazoSelecionado = document.querySelector('input[name="prazo-recebimento"]:checked').value;
         const nomePlano = (prazoSelecionado === 'naHora') ? "Na Hora" : "Um Dia Útil";
-
+        const tipoTransacao = document.querySelector('input[name="tipo-transacao-mensal"]:checked').value;
+        
         const taxasPrima = taxas.primaPay[prazoSelecionado];
         const taxasTrad = taxas.tradicional[prazoSelecionado];
-
-        const parcelasMedia = parcelasMensalSelect.value;
         
-        const taxaParceladoPrima = taxasPrima.parcelado[parcelasMedia];
-        const taxaParceladoTrad = taxasTrad.parcelado[parcelasMedia];
+        let taxaP, taxaT;
+        let nomeTaxa = tipoTransacao;
 
-        const fatDebito = faturamento * pDeb;
-        const fatCredito = faturamento * pCre;
-        const fatParcelado = faturamento * pPar;
+        switch (tipoTransacao) {
+            case 'debito':
+                taxaP = taxasPrima.debito;
+                taxaT = taxasTrad.debito;
+                nomeTaxa = "Débito";
+                break;
+            case 'credito':
+                taxaP = taxasPrima.credito;
+                taxaT = taxasTrad.credito;
+                nomeTaxa = "Crédito";
+                break;
+            case 'parcelado':
+                const parcelas = parcelasMensalSelect.value;
+                taxaP = taxasPrima.parcelado[parcelas];
+                taxaT = taxasTrad.parcelado[parcelas];
+                nomeTaxa = `Parcelado (Média ${parcelas}x)`;
+                break;
+        }
 
-        const descontoPrima = (fatDebito * (taxasPrima.debito / 100)) +
-                              (fatCredito * (taxasPrima.credito / 100)) +
-                              (fatParcelado * (taxaParceladoPrima / 100));
+        const descontoPrima = faturamento * (taxaP / 100);
+        const descontoTrad = faturamento * (taxaT / 100);
 
-        const descontoTrad = (fatDebito * (taxasTrad.debito / 100)) +
-                             (fatCredito * (taxasTrad.credito / 100)) +
-                             (fatParcelado * (taxaParceladoTrad / 100));
-
-        const totalPrima = faturamento - descontoPrima;
-        const totalTrad = faturamento - descontoTrad;
+        // ATUALIZADO: Cálculo do Split (sem imposto)
+        const totalPrimaSplit = faturamento - descontoPrima;
+        // Cálculo Normal (com imposto)
+        const totalPrima = totalPrimaSplit - impostoInfo.impostoProporcional;
+        const totalTrad = (faturamento - descontoTrad) - impostoInfo.impostoProporcional;
+        
         const economiaMes = descontoTrad - descontoPrima;
         const economiaAno = economiaMes * 12;
 
-        const taxasExibicao = {
-            debito: taxasPrima.debito,
-            credito: taxasPrima.credito,
-            parcelado: taxaParceladoPrima 
-        };
+        const taxasExibicao = { [nomeTaxa]: taxaP };
 
-        return { simType: 'mensal', totalPrima, totalTrad, economiaMes, economiaAno, taxasExibicao, nomePlano, parcelasMedia };
+        return { simType: 'mensal', totalPrima, totalPrimaSplit, totalTrad, economiaMes, economiaAno, taxasExibicao, nomePlano, impostoInfo };
     }
 
+    // CÁLCULO DE VENDA (ATUALIZADO)
     function calcularSimulacaoVenda() {
         const faturamento = parseFloat(valorVendaInput.value);
         if (isNaN(faturamento) || faturamento <= 0) {
@@ -224,6 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        const impostoInfo = calcularImpostoSimples(faturamento);
         const tipoTransacao = document.querySelector('input[name="tipo-transacao"]:checked').value;
         const prazoSelecionado = document.querySelector('input[name="prazo-recebimento"]:checked').value;
         const nomePlano = (prazoSelecionado === 'naHora') ? "Na Hora" : "Um Dia Útil";
@@ -243,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'credito':
                 taxaP = taxasPrima.credito;
                 taxaT = taxasTrad.credito;
-                nomeTaxa = "Crédito à Vista";
+                nomeTaxa = "Crédito";
                 break;
             case 'parcelado':
                 const parcelas = numeroParcelasSelect.value;
@@ -255,44 +309,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const descontoPrima = faturamento * (taxaP / 100);
         const descontoTrad = faturamento * (taxaT / 100);
-
-        const totalPrima = faturamento - descontoPrima;
-        const totalTrad = faturamento - descontoTrad;
-        const economiaMes = descontoTrad - descontoPrima; 
+        
+        // ATUALIZADO: Cálculo do Split (sem imposto)
+        const totalPrimaSplit = faturamento - descontoPrima;
+        // Cálculo Normal (com imposto)
+        const totalPrima = totalPrimaSplit - impostoInfo.impostoProporcional;
+        const totalTrad = (faturamento - descontoTrad) - impostoInfo.impostoProporcional;
+        
+        const economiaMes = descontoTrad - descontoPrima; // economia na venda
         const economiaAno = 0; 
 
         const taxasExibicao = { [nomeTaxa]: taxaP };
 
-        return { simType: 'venda', totalPrima, totalTrad, economiaMes, economiaAno, taxasExibicao, nomePlano };
+        return { simType: 'venda', totalPrima, totalPrimaSplit, totalTrad, economiaMes, economiaAno, taxasExibicao, nomePlano, impostoInfo };
     }
 
 
+    // --- 5. FUNÇÃO DE EXIBIÇÃO (ATUALIZADA) ---
     function exibirResultados(resultados) {
         const formatBRL = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-        ratesTitle.textContent = `Nossas taxas para o plano "${resultados.nomePlano}":`;
+        // Muda o título
+        ratesTitle.textContent = `Taxas para o plano "${resultados.nomePlano}":`;
         
         ratesDisplay.innerHTML = ''; // Limpa as taxas anteriores
-        if (resultados.simType === 'mensal') {
-            // Mostra débito e crédito
-            ratesDisplay.innerHTML = `
-                <p>Débito: <strong>${resultados.taxasExibicao.debito}%</strong></p>
-                <p>Crédito: <strong>${resultados.taxasExibicao.credito}%</strong></p>
-            `;
 
-            if (parseFloat(parceladoInput.value) > 0) {
-                ratesDisplay.innerHTML += `
-                    <p>Parcelado (Média ${resultados.parcelasMedia}x): <strong>${resultados.taxasExibicao.parcelado}%</strong></p>
-                `;
-            }
-        } else {
-            for (const [key, value] of Object.entries(resultados.taxasExibicao)) {
-                ratesDisplay.innerHTML = `<p>${key}: <strong>${value}%</strong></p>`;
-            }
+        // 1. Adiciona a taxa da maquininha
+        for (const [key, value] of Object.entries(resultados.taxasExibicao)) {
+            ratesDisplay.innerHTML = `<p>${key} (PrimaPag): <strong>${value}%</strong></p>`;
         }
 
+        // 2. Adiciona a taxa do imposto
+        ratesDisplay.innerHTML += `<p>Imposto Simples (Est. ${resultados.impostoInfo.nomeFaixa}): <strong>${resultados.impostoInfo.aliquotaEfetivaFmt}%</strong></p>`;
+
+        // ATUALIZADO: Atualiza a comparação (os 3 valores)
+        primaSplitTotalSpan.textContent = formatBRL(resultados.totalPrimaSplit);
         primaTotalSpan.textContent = formatBRL(resultados.totalPrima);
         tradTotalSpan.textContent = formatBRL(resultados.totalTrad);
+
+        // Atualiza o destaque de economia
         economiaMesSpan.textContent = formatBRL(resultados.economiaMes);
         
         if (resultados.simType === 'mensal') {
