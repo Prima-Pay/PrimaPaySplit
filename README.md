@@ -1,2 +1,2 @@
-# Maquininhas-POS
-Simulador de taxas da Maquininha PrimaPag, para faturamento ou vendas isoladas.
+# primaPaySplit
+Simulador de taxas da Maquininha PrimaPay, usando Split de pagamentos, para faturamento ou vendas isoladas.

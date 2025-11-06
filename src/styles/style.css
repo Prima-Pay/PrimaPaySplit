@@ -71,7 +71,7 @@ body {
     font-size: 2.5em;
     color: var(--cor-solida-principal);
     margin-bottom: 20px;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .subtitulo-animado {
@@ -108,6 +108,9 @@ body {
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1em;
+    /* Adicionando fonte para consistência */
+    font-family: var(--fonte-principal); 
+    background-color: #fff;
 }
 
 .percentage-wrapper {
@@ -403,4 +406,9 @@ body {
     .valor-economia-split {
         font-size: 1.8em;
     }
+}
+
+/* --- CLASSE ADICIONADA --- */
+.hidden {
+    display: none;
 }

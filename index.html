@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de taxas PrimaPagBank</title>
+    <title>Simulador de Economia de Imposto (Split) - PrimaPay</title>
     
     <link rel="stylesheet" href="src/styles/style.css">
     
@@ -26,169 +26,94 @@
             
             <section class="cotacao-section">
                 
-                <h1 class="titulo-cotacao">Lucre muito mais com as maquininhas PrimaPagBank!</h1>
+                <h1 class="titulo-cotacao">Faça uma simulação para descobrir o quanto você pode economizar em impostos ao adotar o Split PrimaPay!</h1>
 
-                <form id="simulation-form" class="form-calculo">
-                    <h3 style="margin: 0; font-weight: 600;">O que você gostaria de simular?</h3>
-                    <div class="radio-group-wrapper">
-                        <div>
-                            <input type="radio" id="tipo-mensal" name="tipo-simulacao" value="mensal" checked>
-                            <label for="tipo-mensal">Fechamento Mensal</label>
-                        </div>
-                        <div>
-                            <input type="radio" id="tipo-venda" name="tipo-simulacao" value="venda">
-                            <label for="tipo-venda">Uma Venda Única</label>
-                        </div>
+                <form id="split-form" class="form-calculo">
+                    
+                    <div class="input-group" style="max-width: 450px;">
+                        <label for="atividade-principal">Qual a atividade principal do seu negócio?</label>
+                        <select id="atividade-principal">
+                            <option value="comercio">Venda de Mercadorias (Anexo I)</option>
+                            <option value="industria">Fabricação de Produtos (Anexo II)</option>
+                            <option value="servicos">Prestação de Serviços (Anexos III, IV ou V)</option>
+                        </select>
                     </div>
 
-                    <hr style="border: 0; border-top: 1px solid var(--cor-cinza-claro); width: 100%; margin: 25px 0;">
-
-                    <div id="simulacao-mensal-fields">
-                        <div class="input-group" style="max-width: 450px;">
-                            <label for="faturamento-mensal">Quanto costuma faturar por mês? (R$):</label>
-                            <input type="number" id="faturamento-mensal" placeholder="Ex: 5000" min="0" max="500000" step="100" value="5000">
-                            <input type="range" id="faturamento-slider" min="0" max="500000" step="100" value="5000" style="width: 100%; margin-top: 10px; cursor: pointer;">
-                        </div>
-
-                        <h3 style="margin: 15px 0 5px 0; font-weight: 600;">Qual tipo de transação você mais usa?</h3>
-                        <div class="radio-group-wrapper">
-                            <div>
-                                <input type="radio" id="tipo-mensal-debito" name="tipo-transacao-mensal" value="debito" checked>
-                                <label for="tipo-mensal-debito">Débito</label>
-                            </div>
-                            <div>
-                                <input type="radio" id="tipo-mensal-credito" name="tipo-transacao-mensal" value="credito">
-                                <label for="tipo-mensal-credito">Crédito</label>
-                            </div>
-                            <div>
-                                <input type="radio" id="tipo-mensal-parcelado" name="tipo-transacao-mensal" value="parcelado">
-                                <label for="tipo-mensal-parcelado">Crédito Parcelado</label>
-                            </div>
-                        </div>
-                        <div id="parcelas-mensal-group" class="input-group" style="display: none; margin-top: 15px; max-width: 450px;">
-                            <label for="parcelas-mensal-select">Em quantas vezes (em média) é seu parcelado?</label>
-                            <select id="parcelas-mensal-select" class="input-group select">
-                                <option value="2">2x</option>
-                                <option value="3">3x</option>
-                                <option value="4">4x</option>
-                                <option value="5">5x</option>
-                                <option value="6" selected>6x (Média comum)</option>
-                                <option value="7">7x</option>
-                                <option value="8">8x</option>
-                                <option value="9">9x</option>
-                                <option value="10">10x</option>
-                                <option value="11">11x</option>
-                                <option value="12">12x</option>
-                                <option value="13">13x</option>
-                                <option value="14">14x</option>
-                                <option value="15">15x</option>
-                                <option value="16">16x</option>
-                                <option value="17">17x</option>
-                                <option value="18">18x</option>
-                            </select>
-                        </div>
+                    <div id="tipo-servico-group" class="input-group hidden" style="max-width: 450px;">
+                        <label for="tipo-servico">Qual categoria melhor descreve seu serviço?</label>
+                        <select id="tipo-servico">
+                            <option value="servicos-gerais">Serviços Gerais (Salão, Academia, Oficina) - Anexo III</option>
+                            <option value="servicos-intelectuais">Serviços Intelectuais/Técnicos (TI, Consultoria, Medicina) - Anexo V</option>
+                            <option value="servicos-obras">Serviços de Obras, Limpeza ou Vigilância - Anexo IV</option>
+                            <option value="advocacia">Advocacia - Anexo IV</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="max-width: 450px; margin-top: 15px;">
+                        <label for="faturamento-total">Qual seu faturamento mensal total? (R$):</label>
+                        <input type="number" id="faturamento-total" placeholder="Ex: 20000" min="0" max="500000" step="100" value="20000">
+                        <input type="range" id="faturamento-slider" min="0" max="500000" step="100" value="20000" style="width: 100%; margin-top: 10px; cursor: pointer;">
                     </div>
 
-                    <div id="simulacao-venda-fields" style="display: none;">
-                        <div class="input-group">
-                            <label for="valor-venda">Qual o valor da venda? (R$):</label>
-                            <input type="number" id="valor-venda" placeholder="Ex: 150.00">
-                        </div>
-
-                        <h3 style="margin: 15px 0 5px 0; font-weight: 600;">Qual o tipo de transação?</h3>
-                        <div class="radio-group-wrapper">
-                            <div><input type="radio" id="tipo-debito" name="tipo-transacao" value="debito" checked><label for="tipo-debito">Débito</label></div>
-                            <div><input type="radio" id="tipo-credito" name="tipo-transacao" value="credito"><label for="tipo-credito">Crédito</label></div>
-                            <div><input type="radio" id="tipo-parcelado" name="tipo-transacao" value="parcelado"><label for="tipo-parcelado">Crédito Parcelado</label></div>
-                        </div>
-
-                        <div id="parcelas-select-group" class="input-group" style="display: none; margin-top: 15px;">
-                            <label for="numero-parcelas">Em quantas vezes?</label>
-                            <select id="numero-parcelas" class="input-group select">
-                                <option value="2">2x</option>
-                                <option value="3">3x</option>
-                                <option value="4">4x</option>
-                                <option value="5">5x</option>
-                                <option value="6">6x</option>
-                                <option value="7">7x</option>
-                                <option value="8">8x</option>
-                                <option value="9">9x</option>
-                                <option value="10">10x</option>
-                                <option value="11">11x</option>
-                                <option value="12">12x</option>
-                                <option value="13">13x</option>
-                                <option value="14">14x</option>
-                                <option value="15">15x</option>
-                                <option value="16">16x</option>
-                                <option value="17">17x</option>
-                                <option value="18">18x</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <h3 style="margin: 25px 0 5px 0; font-weight: 600;">Como seria o seu prazo para recebimento?</h3>
-                    <div class="radio-group-wrapper">
-                        <div><input type="radio" id="prazo-hora" name="prazo-recebimento" value="naHora" checked><label for="prazo-hora">Na hora</label></div>
-                        <div><input type="radio" id="prazo-dia" name="prazo-recebimento" value="umDia"><label for="prazo-dia">Um dia útil</label></div>
+                    <div class="input-group" style="max-width: 450px;">
+                        <label for="comissao-percent">Qual porcentagem desse faturamento realmente é sua(%)?</label>
+                        <input type="number" id="comissao-percent" min="1" max="99" step="1" value="20">
+                        <input type="range" id="comissao-slider" min="1" max="99" step="1" value="20" style="width: 100%; margin-top: 10px; cursor: pointer;">
                     </div>
                     
-                    <button type="submit" id="simular-btn" class="btn-principal" style="margin-top: 25px;">
-                        Simular
+                    <button type="submit" id="simular-split-btn" class="btn-principal" style="margin-top: 25px;">
+                        Simular Economia
                     </button>
                 </form>
 
                 <section id="results-container" class="resultado" style="display: none;">
-                    
-                    <h2 id="rates-title">Taxas para o plano "Na Hora":</h2>
-                    <div id="rates-display" class="rates-info-box"></div>
     
-                    <div class="resultado-colunas">
-                        
-                        <div class="coluna-resultados">
-                            <h2>Comparativo de recebimento:</h2>
-                            
-                            <div class="quadro-item">
-                                <h3>Quanto você receberia com a <strong>PrimaPagBank</strong> (Normal):</h3>
-                                <p id="prima-total" class="valor-economia-total">R$ 0,00</p>
-                            </div>
-
-                            <div class="quadro-item">
-                                <h3>Quanto você recebe com maquininhas <strong>tradicionais</strong>:</h3>
-                                <p id="trad-total" class="valor-economia">R$ 0,00</p>
-                            </div>
-
-                            <button id="btnContato" class="btn-secundario">
-                                Falar com um especialista
-                            </button>
+                    <h2 id="rates-title">Comparativo de Imposto</h2>
+                    <div id="rates-display" class="rates-info-box">
                         </div>
-                        
+
+                        <div class="resultado-colunas">
+    
+                        <div class="coluna-resultados">
+                            <h2>Imposto Mensal Estimado:</h2>
+            
+                            <div class="quadro-item">
+                                <h3>Imposto pago <strong>Sem Split</strong> (sobre o faturamento total):</h3>
+                                <p id="imposto-sem-split" class="valor-economia">R$ 0,00</p>
+                            </div>
+
+                            <div class="quadro-item">
+                                <h3>Imposto pago <strong>Com Split PrimaPay</strong> (Somente sua parte do faturamento):</h3>
+                                <p id="imposto-com-split" class="valor-economia-total">R$ 0,00</p>
+                            </div>
+                        </div>
+    
                         <div class="coluna-propaganda">
-                            
+            
                             <div class="quadro-item-economia">
-                                <h3>Com a PrimaPagBank, você economizaria:</h3>
+                                <h3>Sua Economia em Impostos:</h3>
                                 <p id="economia-mes-label" style="margin: 5px 0; font-size: 0.9em; text-transform: uppercase;">Por Mês</p>
-                                <span id="economia-mes">R$ 0,00</span>
-                                
+                                <span id="economia-imposto-mes">R$ 0,00</span>
+                
                                 <div id="economia-ano-container">
                                     <p id="economia-ano-label" style="margin: 15px 0 5px 0; font-size: 0.9em; text-transform: uppercase;">Por Ano</p>
-                                    <span id="economia-ano">R$ 0,00</span>
+                                    <span id="economia-imposto-ano">R$ 0,00</span>
                                 </div>
                             </div>
-                            
-                            <div class="quadro-item quadro-item-split">
-                                <h3>Receba <strong>MAIS</strong> com a Maquininha PrimaPay:</h3>
-                                <p id="prima-split-total" class="valor-economia-split">R$ 0,00</p>
-                                <p class="split-descricao">
-                                    Veja quanto você economiza ao pagar <strong>impostos apenas sobre a sua comissão</strong>, e não sobre o valor total da venda.
-                                </p>
-                                <a href="https://primapay.com.br/maquininhas-prima-pay/" target="_blank" class="btn-cta-split">
-                                    Conhecer Solução Split
-                                </a>
-                            </div>
-
+            
                         </div>
-                    </div>
+                        </div> <div class="quadro-item quadro-item-split" style="display: block;">
+                            <h3>Pare de pagar imposto dobrado!</h3>
+                            <p class="split-descricao" style="text-align: center; margin-bottom: 15px;">
+                                Com o Split PrimaPay, você e seus parceiros pagam impostos de forma justa.
+                            </p>
+                            <a href="https://primapay.com/maquininhas-prima-pay/" target="_blank" class="btn-cta-split">
+                                Conhecer Solução Split
+                            </a>
+                        </div>
+
                 </section>
+
+                
             </section>
         </div>
     </main>
