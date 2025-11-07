@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const impostoComSplitSpan = document.getElementById('imposto-com-split');
     const economiaImpostoMesSpan = document.getElementById('economia-imposto-mes');
     const economiaImpostoAnoSpan = document.getElementById('economia-imposto-ano');
-    
+
     // --- 2. EVENT LISTENERS ---
 
     // Mostra/oculta o seletor de "Tipo de Serviço"
@@ -223,8 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const economiaAno = economiaMes * 12;
 
         return {
-            impostoSemSplit: impostoErrado.impostoProporcional,
-            impostoComSplit: impostoCerto.impostoProporcional,
+            impostoSemSplit: impostoErrado.impostoProporcional * 12,
+            impostoComSplit: impostoCerto.impostoProporcional * 12,
             economiaMes: economiaMes,
             economiaAno: economiaAno,
             aliquotaErrada: impostoErrado.aliquotaEfetivaFmt,
