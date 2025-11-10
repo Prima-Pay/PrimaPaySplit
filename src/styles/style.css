@@ -30,7 +30,6 @@ body {
     padding: 0 15px;
 }
 
-/* Header */
 .header {
     background-color: var(--cor-fundo);
     padding: 10px 0;
@@ -89,7 +88,6 @@ body {
     margin-bottom: 40px;
 }
 
-/* MODIFICAÇÃO #1: Largura corrigida para 450px */
 .input-group {
     width: 100%;
     max-width: 450px;
@@ -241,13 +239,13 @@ body {
 .resultado-colunas {
     display: flex;
     gap: 20px;
-    align-items: flex-start;
+    align-items: stretch;
     margin-bottom: 10px;
     text-align: center;
 }
 
 .coluna-resultados {
-    flex: 2;
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -258,8 +256,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px; 
-    align-self: flex-end;
 }
+
 
 .quadro-item-economia {
     background: linear-gradient(to top left, var(--cor-primaria-start), var(--cor-primaria-end));
@@ -268,26 +266,34 @@ body {
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    height: fit-content;
+
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
 }
 
 .quadro-item-economia h3 {
     margin-top: 0;
-    font-size: 1.1em;
+    font-size: 1.6em;
     font-weight: 700;
+    margin-bottom: 0;
 }
 
 .quadro-item-economia span {
     font-weight: 800;
-    font-size: 1.3em;
+    font-size: 2.8em;
     color: #ffd700;
+    margin-bottom: 0;
 }
 
 .quadro-item-economia p {
-    margin: 8px 0;
-    font-size: 0.95em;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 0;
 }
-
 
 .quadro-item {
     background-color: var(--cor-fundo);
@@ -327,7 +333,7 @@ body {
 
     .coluna-resultados,
     .coluna-propaganda {
-        flex: none;
+        flex: 1;
         width: 100%;
         margin-bottom: 20px;
     }
@@ -408,17 +414,10 @@ body {
     }
 }
 
-/* --- CLASSE ADICIONADA --- */
 .hidden {
     display: none;
 }
 
-/* ===============================================
-    NOVAS REGRAS (Limpas e validadas)
-===============================================
-*/
-
-/* 1. Estilo da legenda de ajuda (magenta) */
 .input-helper-text {
     display: block; 
     font-size: 0.85em; 
@@ -428,11 +427,9 @@ body {
     font-weight: 500; 
 }
 
-/* 2. Estilo dos sliders (movidos do HTML) */
 #faturamento-slider,
 #comissao-slider {
     width: 100%;
     cursor: pointer;
-    /* Espaçamento padrão de 10px para ambos */
     margin-top: 10px;
 }
