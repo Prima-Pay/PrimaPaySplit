@@ -89,9 +89,10 @@ body {
     margin-bottom: 40px;
 }
 
+/* MODIFICAÇÃO #1: Largura corrigida para 450px */
 .input-group {
     width: 100%;
-    max-width: 300px;
+    max-width: 450px;
     text-align: left;
 }
 
@@ -108,7 +109,6 @@ body {
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1em;
-    /* Adicionando fonte para consistência */
     font-family: var(--fonte-principal); 
     background-color: #fff;
 }
@@ -411,4 +411,28 @@ body {
 /* --- CLASSE ADICIONADA --- */
 .hidden {
     display: none;
+}
+
+/* ===============================================
+    NOVAS REGRAS (Limpas e validadas)
+===============================================
+*/
+
+/* 1. Estilo da legenda de ajuda (magenta) */
+.input-helper-text {
+    display: block; 
+    font-size: 0.85em; 
+    color: var(--cor-primaria-end); 
+    margin-top: 6px; 
+    line-height: 1.4; 
+    font-weight: 500; 
+}
+
+/* 2. Estilo dos sliders (movidos do HTML) */
+#faturamento-slider,
+#comissao-slider {
+    width: 100%;
+    cursor: pointer;
+    /* Espaçamento padrão de 10px para ambos */
+    margin-top: 10px;
 }

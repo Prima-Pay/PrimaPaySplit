@@ -30,7 +30,7 @@
 
                 <form id="split-form" class="form-calculo">
                     
-                    <div class="input-group" style="max-width: 450px;">
+                    <div class="input-group">
                         <label for="atividade-principal">Qual a atividade principal do seu negócio?</label>
                         <select id="atividade-principal">
                             <option value="comercio">Venda de Mercadorias (Anexo I)</option>
@@ -39,7 +39,7 @@
                         </select>
                     </div>
 
-                    <div id="tipo-servico-group" class="input-group hidden" style="max-width: 450px;">
+                    <div id="tipo-servico-group" class="input-group hidden">
                         <label for="tipo-servico">Qual categoria melhor descreve seu serviço?</label>
                         <select id="tipo-servico">
                             <option value="servicos-gerais">Serviços Gerais (Salão, Academia, Oficina) - Anexo III</option>
@@ -48,19 +48,24 @@
                             <option value="advocacia">Advocacia - Anexo IV</option>
                         </select>
                     </div>
-                    <div class="input-group" style="max-width: 450px; margin-top: 15px;">
+    
+                    <div class="input-group">
                         <label for="faturamento-total">Qual seu faturamento mensal total? (R$):</label>
                         <input type="number" id="faturamento-total" placeholder="Ex: 20000" min="0" max="500000" step="100" value="20000">
-                        <input type="range" id="faturamento-slider" min="15000" max="500000" step="100" value="20000" style="width: 100%; margin-top: 10px; cursor: pointer;">
+                        <input type="range" id="faturamento-slider" min="15000" max="500000" step="100" value="20000">
                     </div>
 
-                    <div class="input-group" style="max-width: 450px;">
+                    <div class="input-group">
                         <label for="comissao-percent">Qual porcentagem desse faturamento realmente é sua(%)?</label>
                         <input type="number" id="comissao-percent" min="1" max="99" step="1" value="20">
-                        <input type="range" id="comissao-slider" min="1" max="99" step="1" value="20" style="width: 100%; margin-top: 10px; cursor: pointer;">
+                        <input type="range" id="comissao-slider" min="1" max="99" step="1" value="20">
+                        
+                        <small class="input-helper-text">
+                            Você deve excluir todo tipo de gasto, como pagamento de parceiros, fornecedores, contas fixas, funcionários etc.
+                        </small>
                     </div>
-                    
-                    <button type="submit" id="simular-split-btn" class="btn-principal" style="margin-top: 25px;">
+    
+                    <button type="submit" id="simular-split-btn" class="btn-principal">
                         Simular Economia
                     </button>
                 </form>

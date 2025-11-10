@@ -1,8 +1,4 @@
-// Aguarda o documento HTML carregar completamente
 document.addEventListener('DOMContentLoaded', () => {
-
-    // --- 0. BANCO DE DADOS DOS ANEXOS ---
-    // Armazena as tabelas do Simples Nacional em um objeto
     const ANEXOS_SIMPLES = {
         anexoI: {
             nome: "Anexo I - Comércio",
@@ -61,21 +57,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- 1. SELEÇÃO DOS ELEMENTOS DO HTML ---
     const form = document.getElementById('split-form');
     const resultsContainer = document.getElementById('results-container');
-    
-    // Inputs
     const atividadePrincipalSelect = document.getElementById('atividade-principal');
     const tipoServicoGroup = document.getElementById('tipo-servico-group');
     const tipoServicoSelect = document.getElementById('tipo-servico');
-
     const faturamentoInput = document.getElementById('faturamento-total');
     const faturamentoSlider = document.getElementById('faturamento-slider');
     const comissaoInput = document.getElementById('comissao-percent');
     const comissaoSlider = document.getElementById('comissao-slider');
-
-    // Resultados
     const ratesTitle = document.getElementById('rates-title');
     const ratesDisplay = document.getElementById('rates-display');
     const impostoSemSplitSpan = document.getElementById('imposto-sem-split');
@@ -83,9 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const economiaImpostoMesSpan = document.getElementById('economia-imposto-mes');
     const economiaImpostoAnoSpan = document.getElementById('economia-imposto-ano');
 
-    // --- 2. EVENT LISTENERS ---
 
-    // Mostra/oculta o seletor de "Tipo de Serviço"
     atividadePrincipalSelect.addEventListener('change', (e) => {
         if (e.target.value === 'servicos') {
             tipoServicoGroup.classList.remove('hidden');
@@ -94,14 +82,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Sincroniza o Slider e o Input de Faturamento
     faturamentoSlider.addEventListener('input', (e) => { faturamentoInput.value = e.target.value; });
     faturamentoInput.addEventListener('input', (e) => {
         if (parseFloat(e.target.value) > 500000) e.target.value = 500000;
         faturamentoSlider.value = e.target.value;
     });
 
-    // Sincroniza o Slider e o Input de Comissão
     comissaoSlider.addEventListener('input', (e) => { comissaoInput.value = e.target.value; });
     comissaoInput.addEventListener('input', (e) => {
         if (parseFloat(e.target.value) > 99) e.target.value = 99;
@@ -109,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
         comissaoSlider.value = e.target.value;
     });
 
-    // Listener principal do formulário
     form.addEventListener('submit', (event) => {
         event.preventDefault(); 
         const resultados = calcularSimulacaoSplit();
@@ -118,12 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 3. FUNÇÕES DE CÁLCULO ---
-
-    /**
-     * Calcula o imposto Simples Nacional (GENERALIZADO)
-     * com base no faturamento e no Anexo escolhido.
-     */
     function calcularImpostoSimples(valorBase, anexoKey) {
         
         const anexoData = ANEXOS_SIMPLES[anexoKey];
@@ -133,12 +112,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const faixas = anexoData.faixas;
-        const RBT12 = valorBase * 12; // Estima o faturamento anual (RBT12)
+        const RBT12 = valorBase * 12; 
         
         let aliquotaNominal, valorDeducao, nomeFaixa;
-        let faixaEncontrada = faixas[faixas.length - 1]; // Padrão: última faixa
-
-        // Encontra a faixa correta
+        let faixaEncontrada = faixas[faixas.length - 1]; 
         for (let i = 0; i < faixas.length; i++) {
             if (RBT12 <= faixas[i].ate) {
                 faixaEncontrada = faixas[i];
@@ -146,7 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             }
         }
-        // Se RBT12 for maior que a última faixa
         if (!nomeFaixa) {
              nomeFaixa = `Faixa ${faixas.length}`;
         }
@@ -156,22 +132,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let aliquotaEfetiva = (RBT12 * aliquotaNominal - valorDeducao) / RBT12;
         
-        // A alíquota efetiva não pode ser menor que a alíquota da 1ª faixa (para Anexos III e V)
         const aliquotaMinima = faixas[0].aliquota;
         if (aliquotaEfetiva < aliquotaMinima) {
             aliquotaEfetiva = aliquotaMinima;
         }
         
-        // Imposto proporcional ao valor base (mensal)
         const impostoProporcional = valorBase * aliquotaEfetiva;
         const aliquotaEfetivaFmt = (aliquotaEfetiva * 100).toFixed(2); // Formata para "4.83"
 
         return { impostoProporcional, aliquotaEfetivaFmt, nomeFaixa, nomeAnexo: anexoData.nome };
     }
 
-    /**
-     * Função principal que calcula a diferença de imposto
-     */
     function calcularSimulacaoSplit() {
         const faturamentoTotal = parseFloat(faturamentoInput.value);
         const comissaoPercent = parseFloat(comissaoInput.value) / 100;
@@ -181,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // --- Lógica para determinar o Anexo ---
         const atividade = atividadePrincipalSelect.value;
         const tipoServico = tipoServicoSelect.value;
         let anexoKey;
@@ -208,17 +178,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 break;
         }
-        // ----------------------------------------
 
         const valorComissao = faturamentoTotal * comissaoPercent;
-
-        // 1. Cálculo Errado (Sem Split)
         const impostoErrado = calcularImpostoSimples(faturamentoTotal, anexoKey);
-
-        // 2. Cálculo Certo (Com Split)
         const impostoCerto = calcularImpostoSimples(valorComissao, anexoKey);
-
-        // 3. Economia
         const economiaMes = impostoErrado.impostoProporcional - impostoCerto.impostoProporcional;
         const economiaAno = economiaMes * 12;
 
@@ -231,28 +194,23 @@ document.addEventListener('DOMContentLoaded', () => {
             aliquotaCerta: impostoCerto.aliquotaEfetivaFmt,
             faixaErrada: impostoErrado.nomeFaixa,
             faixaCerta: impostoCerto.nomeFaixa,
-            nomeAnexo: impostoCerto.nomeAnexo // Passa o nome do anexo para exibição
+            nomeAnexo: impostoCerto.nomeAnexo
         };
     }
 
-    // --- 4. FUNÇÃO DE EXIBIÇÃO ---
     function exibirResultados(resultados) {
         const formatBRL = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-        // Atualiza o TÍTULO da seção
         ratesTitle.textContent = `Comparativo de Imposto (${resultados.nomeAnexo})`;
 
-        // Atualiza as alíquotas de imposto
         ratesDisplay.innerHTML = `
             <p>Alíquota (Sem Split - ${resultados.faixaErrada}): <strong>${resultados.aliquotaErrada}%</strong></p>
             <p>Alíquota (Com Split - ${resultados.faixaCerta}): <strong>${resultados.aliquotaCerta}%</strong></p>
         `;
 
-        // Atualiza a comparação de impostos
         impostoSemSplitSpan.textContent = formatBRL(resultados.impostoSemSplit);
         impostoComSplitSpan.textContent = formatBRL(resultados.impostoComSplit);
-
-        // Atualiza o destaque de economia
+        
         economiaImpostoMesSpan.textContent = formatBRL(resultados.economiaMes);
         economiaImpostoAnoSpan.textContent = formatBRL(resultados.economiaAno);
 
