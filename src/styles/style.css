@@ -236,60 +236,39 @@ body {
     font-size: 1.1em;
 }
 
-.resultado-colunas {
-    display: flex;
-    gap: 20px;
-    align-items: stretch;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.coluna-resultados {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.coluna-propaganda {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 10px; 
-}
-
-
 .quadro-item-economia {
     background: linear-gradient(to top left, var(--cor-primaria-start), var(--cor-primaria-end));
     color: var(--cor-texto-claro);
-    padding: 15px;
+    padding: 10px 15px;
     border-radius: 10px;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    margin-bottom: 10px;
 }
 
 .quadro-item-economia h3 {
     margin-top: 0;
-    font-size: 1.6em;
+    font-size: 1.2em;
     font-weight: 700;
     margin-bottom: 0;
 }
 
 .quadro-item-economia span {
     font-weight: 800;
-    font-size: 2.8em;
+    font-size: 2.0em;
     color: #ffd700;
     margin-bottom: 0;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    line-height: 1;
 }
 
 .quadro-item-economia p {
-    font-size: 1.2em;
+    font-size: 0.9em;
     text-transform: uppercase;
     font-weight: 600;
     margin: 0;
@@ -301,6 +280,7 @@ body {
     border-radius: 8px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     text-align: left;
+    margin-bottom: 10px;
 }
 
 .quadro-item h3 {
@@ -326,17 +306,16 @@ body {
     margin: 0;
 }
 
-@media (max-width: 768px) {
-    .resultado-colunas {
-        flex-direction: column;
-    }
+.input-helper-text {
+    display: block; 
+    font-size: 0.85em; 
+    color: var(--cor-primaria-end); /* <-- A COR ROXA */
+    margin-top: 6px; 
+    line-height: 1.4; 
+    font-weight: 500; 
+}
 
-    .coluna-resultados,
-    .coluna-propaganda {
-        flex: 1;
-        width: 100%;
-        margin-bottom: 20px;
-    }
+@media (max-width: 768px) {
 
     .quadro-item {
         width: 100%;
@@ -361,7 +340,37 @@ body {
         gap: 5px;
     }
     .percentage-wrapper .input-group label {
-        font-size: 0.8em; /* Reduz a fonte para caber */
+        font-size: 0.8em;
+    }
+    .cotacao-section {
+            padding: 10px; 
+    }
+
+    .resultado {
+        padding: 5px; 
+    }
+
+    .quadro-item-economia h3 {
+        font-size: 1.3em;
+    }
+    .quadro-item-economia p {
+        font-size: 1.0em;
+    }
+    .quadro-item-economia span {
+        font-size: 1.8em; 
+    }
+
+    .main-content {
+        padding: 10px 0;
+    }
+
+    .container {
+        padding: 0 5px;
+    } 
+
+    .rates-info-box {
+        max-width: 100%;
+        padding: 10px;
     }
 }
 
@@ -385,7 +394,7 @@ body {
 .split-descricao {
     font-size: 0.9em;
     margin: 5px 0 15px 0;
-    text-align: left; 
+    text-align: center; 
     color: var(--cor-texto-escuro);
 }
 
@@ -406,25 +415,6 @@ body {
 .btn-cta-split:hover {
     opacity: 0.8;
     transform: translateY(-1px);
-}
-
-@media (max-width: 768px) {
-    .valor-economia-split {
-        font-size: 1.8em;
-    }
-}
-
-.hidden {
-    display: none;
-}
-
-.input-helper-text {
-    display: block; 
-    font-size: 0.85em; 
-    color: var(--cor-primaria-end); 
-    margin-top: 6px; 
-    line-height: 1.4; 
-    font-weight: 500; 
 }
 
 #faturamento-slider,
